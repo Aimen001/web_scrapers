@@ -21,7 +21,7 @@ class LinkedinSpider(scrapy.Spider):
         print(f"******* Num Jobs Returned: {num_jobs_returned} *******")
 
         for job in jobs:
-            # Add error handling for .get() methods to prevent potential None errors
+            
             job_title = job.css('h3.base-search-card__title::text').get()
             company_name = job.css('h4.base-search-card__subtitle a::text').get()
             location = job.css('div.base-search-card__metadata span::text').get()
@@ -30,7 +30,6 @@ class LinkedinSpider(scrapy.Spider):
             job_link = job.css('a.base-card__full-link.absolute::attr(href)').get()
             company_link = job.css('h4.base-search-card__subtitle a::attr(href)').get()
 
-            # Only yield if essential fields are not None
             if job_title and company_name:
                 yield {
                     'job_title': job_title.strip() if job_title else '',
@@ -42,7 +41,6 @@ class LinkedinSpider(scrapy.Spider):
                     'company_link': company_link.strip() if company_link else '',
                 }
 
-        # Continue pagination if jobs were found
         if num_jobs_returned > 0:
             first_job_on_the_page = int(first_job_on_the_page) + 25
             next_url = self.start_url + str(first_job_on_the_page)
